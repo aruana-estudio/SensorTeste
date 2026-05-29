@@ -9,8 +9,8 @@
     <link rel="manifest" href="manifest.webmanifest">
   </head>
   <body>
-  <div id="unity-container" style="display:none;">
-    <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+  <div id="unity-container" class="unity-container">
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
     <div id="unity-loading-bar">
       <div id="unity-logo"></div>
       <div id="unity-progress-bar-empty">
@@ -20,12 +20,56 @@
     <div id="unity-warning"></div>
   </div>
 
-  <!-- Botão para iniciar o jogo -->
-  <div style="text-align:center; margin-top:40px;">
-    <button id="startButton" style="font-size:24px; padding:15px 40px; cursor:pointer;">
-      Iniciar Jogo
-    </button>
-  </div>
+  <!-- Botão de iniciar jogo (overlay responsivo) -->
+  <button id="startButton" class="start-button">
+    Iniciar Jogo
+  </button>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .unity-container {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #unity-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .start-button {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(18px, 3vw, 28px);
+      padding: 1em 2.5em;
+      cursor: pointer;
+      border-radius: 8px;
+      border: none;
+      background: #1e88e5;
+      color: #fff;
+      font-family: sans-serif;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      z-index: 9999;
+    }
+
+    #unity-loading-bar {
+      position: absolute;
+      left: 50%;
+      bottom: 5%;
+      transform: translateX(-50%);
+    }
+  </style>
 
   <script>
     window.addEventListener("load", function () {
@@ -72,27 +116,35 @@
       showBanner: unityShowBanner,
     };
 
-    // Quando clicar no botão, inicia o carregamento
-    document.getElementById("startButton").addEventListener("click", function () {
-      this.style.display = "none"; // esconde o botão
-      container.style.display = "block"; // mostra o canvas
+    // Mobile: já está ok no seu código original, mas reforçando:
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+    }
 
+    document.getElementById("startButton").addEventListener("click", function () {
+      var btn = this;
+      btn.style.display = "none";
       loadingBar.style.display = "block";
 
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
+          progressBarFull.style.width = (100 * progress) + "%";
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
         }).catch((message) => {
           alert(message);
+          btn.style.display = "block"; // se der erro, volta o botão
         });
       };
       document.body.appendChild(script);
     });
   </script>
 </body>
+
 
 </html>
