@@ -2,42 +2,42 @@
 <html lang="en-us">
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>Unity Web Player | TesteGyrooo</title>
-        <link rel="shortcut icon" href="TemplateData/favicon.ico">
-          <link rel="stylesheet" href="TemplateData/style.css">
-            <link rel="manifest" href="manifest.webmanifest">
-
-              <style>
-                #overlay-start {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(15, 15, 15, 0.98);
-                display: flex; /* Inicia visível cobrindo tudo */
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-                }
-                #btn-iniciar {
-                padding: 20px 50px;
-                font-size: 24px;
-                font-weight: bold;
-                color: #ffffff;
-                background: linear-gradient(135deg, #1e90ff, #0052d4);
-                border: none;
-                border-radius: 40px;
-                cursor: pointer;
-                box-shadow: 0px 4px 15px rgba(0, 82, 212, 0.4);
-                transition: transform 0.2s, background 0.2s;
-                }
-                #btn-iniciar:active {
-                transform: scale(0.95);
-                }
-              </style>
-            </head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Web Player | TesteGyrooo</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="manifest" href="manifest.webmanifest">
+    
+    <style>
+      #overlay-start {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(15, 15, 15, 0.98);
+        display: flex; /* Inicia visível cobrindo tudo */
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+      #btn-iniciar {
+        padding: 20px 50px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #ffffff;
+        background: linear-gradient(135deg, #1e90ff, #0052d4);
+        border: none;
+        border-radius: 40px;
+        cursor: pointer;
+        box-shadow: 0px 4px 15px rgba(0, 82, 212, 0.4);
+        transition: transform 0.2s, background 0.2s;
+      }
+      #btn-iniciar:active {
+        transform: scale(0.95);
+      }
+    </style>
+  </head>
   <body>
     <!-- Tela de bloqueio inicial (Aparece antes de carregar qualquer script da Unity) -->
     <div id="overlay-start">
@@ -45,9 +45,8 @@
     </div>
 
     <div id="unity-container">
-      <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
-      <div id="unity-loading-bar" style="display: none;">
-        <!-- Inicia escondida -->
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar" style="display: none;"> <!-- Inicia escondida -->
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
           <div id="unity-progress-bar-full"></div>
@@ -57,9 +56,9 @@
     </div>
     <script>
       window.addEventListener("load", function () {
-      if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("ServiceWorker.js");
-      }
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("ServiceWorker.js");
+        }
       });
 
       var container = document.querySelector("#unity-container");
@@ -70,84 +69,85 @@
       var overlayStart = document.querySelector("#overlay-start");
 
       function unityShowBanner(msg, type) {
-      function updateBannerVisibility() {
-      warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-      }
-      var div = document.createElement('div');
-      div.innerHTML = msg;
-      warningBanner.appendChild(div);
-      if (type == 'error') div.style = 'background: red; padding: 10px;';
-      else {
-      if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-      setTimeout(function() {
-      warningBanner.removeChild(div);
-      updateBannerVisibility();
-      }, 5000);
-      }
-      updateBannerVisibility();
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
       }
 
       var buildUrl = "Build";
       var loaderUrl = buildUrl + "/SensorTeste.loader.js";
       var config = {
-      arguments: [],
-      dataUrl: buildUrl + "/SensorTeste.data",
-      frameworkUrl: buildUrl + "/SensorTeste.framework.js",
-      codeUrl: buildUrl + "/SensorTeste.wasm",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "DefaultCompany",
-      productName: "TesteGyrooo",
-      productVersion: "1.0",
-      showBanner: unityShowBanner,
+        arguments: [],
+        dataUrl: buildUrl + "/SensorTeste.data",
+        frameworkUrl: buildUrl + "/SensorTeste.framework.js",
+        codeUrl: buildUrl + "/SensorTeste.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "TesteGyrooo",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
       };
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-      var meta = document.createElement('meta');
-      meta.name = 'viewport';
-      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-      document.getElementsByTagName('head')[0].appendChild(meta);
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
       }
 
       // Esta função gerencia a permissão e SÓ DEPOIS dispara o carregamento da Unity
       function solicitarPermissaoECarregar() {
-      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission()
-      .then(permissionState => {
-      if (permissionState === 'granted') {
-      console.log("Permissão concedida.");
-      }
-      iniciarCarregamentoUnity();
-      })
-      .catch(error => {
-      console.error("Erro ao pedir permissão:", error);
-      iniciarCarregamentoUnity(); // Carrega mesmo assim caso seja um falso positivo
-      });
-      } else {
-      console.log("Navegador não exige API de permissão manual.");
-      iniciarCarregamentoUnity();
-      }
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+          DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+              if (permissionState === 'granted') {
+                console.log("Permissão concedida.");
+              }
+              iniciarCarregamentoUnity();
+            })
+            .catch(error => {
+              console.error("Erro ao pedir permissão:", error);
+              iniciarCarregamentoUnity(); // Carrega mesmo assim caso seja um falso positivo
+            });
+        } else {
+          console.log("Navegador não exige API de permissão manual.");
+          iniciarCarregamentoUnity();
+        }
       }
 
       // Código original da Unity encapsulado para rodar pós-clique
       function iniciarCarregamentoUnity() {
-      // Esconde o botão e mostra a barra de carregamento padrão da Unity
-      overlayStart.style.display = "none";
-      loadingBar.style.display = "block";
+        // Esconde o botão e mostra a barra de carregamento padrão da Unity
+        overlayStart.style.display = "none";
+        loadingBar.style.display = "block";
 
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
-      progressBarFull.style.width = 100 * progress + "%";
-      }).then((unityInstance) => {
-      loadingBar.style.display = "none";
-      }).catch((message) => {
-      alert(message);
-      });
-      };
-      document.body.appendChild(script);
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+          createUnityInstance(canvas, config, (progress) => {
+            progressBarFull.style.width = 100 * progress + "%";
+          }).then((unityInstance) => {
+            loadingBar.style.display = "none";
+          }).catch((message) => {
+            alert(message);
+          });
+        };
+        document.body.appendChild(script);
       }
     </script>
   </body>
 </html>
+
 
