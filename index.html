@@ -1,29 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | TesteGyrooo</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <link rel="manifest" href="manifest.webmanifest">
-  </head>
-  <body>
-  <div id="unity-container" class="unity-container">
-    <canvas id="unity-canvas" tabindex="-1"></canvas>
-    <div id="unity-loading-bar">
-      <div id="unity-logo"></div>
-      <div id="unity-progress-bar-empty">
-        <div id="unity-progress-bar-full"></div>
-      </div>
-    </div>
-    <div id="unity-warning"></div>
-  </div>
-
-  <!-- Botão de iniciar jogo (overlay responsivo) -->
-  <button id="startButton" class="start-button">
-    Iniciar Jogo
-  </button>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity Web Player | TesteGyrooo</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <link rel="manifest" href="manifest.webmanifest">
 
   <style>
     html, body {
@@ -35,41 +18,57 @@
       background: #000;
     }
 
-    .unity-container {
-      width: 100vw;
-      height: 100vh;
-    }
-
-    #unity-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
+    /* Botão estilizado */
     .start-button {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      padding: 18px 42px;
       font-size: clamp(18px, 3vw, 28px);
-      padding: 1em 2.5em;
-      cursor: pointer;
-      border-radius: 8px;
+      background: linear-gradient(135deg, #2196f3, #1976d2);
+      color: white;
       border: none;
-      background: #1e88e5;
-      color: #fff;
-      font-family: sans-serif;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      transition: 0.2s ease;
       z-index: 9999;
     }
 
-    #unity-loading-bar {
-      position: absolute;
-      left: 50%;
-      bottom: 5%;
-      transform: translateX(-50%);
+    .start-button:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.45);
+    }
+
+    /* Garantir que o canvas sempre ocupe a tela */
+    #unity-canvas {
+      width: 100vw !important;
+      height: 100vh !important;
+      display: block;
+      background: #000;
     }
   </style>
+</head>
+
+<body>
+
+  <div id="unity-container">
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+    <div id="unity-loading-bar">
+      <div id="unity-logo"></div>
+      <div id="unity-progress-bar-empty">
+        <div id="unity-progress-bar-full"></div>
+      </div>
+    </div>
+
+    <div id="unity-warning"></div>
+  </div>
+
+  <!-- Botão de iniciar -->
+  <button id="startButton" class="start-button">Iniciar Jogo</button>
 
   <script>
     window.addEventListener("load", function () {
@@ -104,6 +103,7 @@
 
     var buildUrl = "Build";
     var loaderUrl = buildUrl + "/SensorTeste.loader.js";
+
     var config = {
       arguments: [],
       dataUrl: buildUrl + "/SensorTeste.data",
@@ -116,7 +116,7 @@
       showBanner: unityShowBanner,
     };
 
-    // Mobile: já está ok no seu código original, mas reforçando:
+    // Mobile viewport
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       var meta = document.createElement('meta');
       meta.name = 'viewport';
@@ -124,27 +124,33 @@
       document.getElementsByTagName('head')[0].appendChild(meta);
     }
 
+    // Clique no botão inicia o Unity
     document.getElementById("startButton").addEventListener("click", function () {
-      var btn = this;
-      btn.style.display = "none";
+      const btn = this;
+      btn.style.opacity = "0";
+      btn.style.pointerEvents = "none";
+
       loadingBar.style.display = "block";
 
       var script = document.createElement("script");
       script.src = loaderUrl;
+
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = (100 * progress) + "%";
-        }).then((unityInstance) => {
+          progressBarFull.style.width = (progress * 100) + "%";
+        }).then(() => {
           loadingBar.style.display = "none";
         }).catch((message) => {
           alert(message);
-          btn.style.display = "block"; // se der erro, volta o botão
+          btn.style.opacity = "1";
+          btn.style.pointerEvents = "auto";
         });
       };
+
       document.body.appendChild(script);
     });
   </script>
+
 </body>
-
-
 </html>
+
